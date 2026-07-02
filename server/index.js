@@ -21,11 +21,34 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
+
     console.log("A user connected:", socket.id);
 
-    socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
+    socket.on("hello-server", (data) => {
+
+        console.log("Message from client:", data);
+
+        socket.emit(
+            "hello-client",
+            "Hello Vaishu! Server received your message."
+        );
+
     });
+
+    socket.on("send-message", (message) => {
+
+        console.log(message);
+
+        io.emit("receive-message", message);
+
+    });
+
+    socket.on("disconnect", () => {
+
+        console.log("User disconnected:", socket.id);
+
+    });
+
 });
 
 const PORT = 5000;

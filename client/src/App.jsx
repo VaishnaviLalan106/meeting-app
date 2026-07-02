@@ -13,8 +13,13 @@ function App() {
     socket.on("connect", () => {
       setSocketId(socket.id);
       setStatus("Connected");
+      socket.emit("hello-server", "Hello from React!");
     });
+    socket.on("hello-client", (message) => {
 
+    alert(message);
+
+});
     socket.on("disconnect", () => {
       setStatus("Disconnected");
       setSocketId("");

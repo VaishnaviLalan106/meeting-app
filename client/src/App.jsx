@@ -7,43 +7,118 @@ function App() {
 
   const [socketId, setSocketId] = useState("");
   const [status, setStatus] = useState("Connecting...");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
 
-    socket.on("connect", () => {
-      setSocketId(socket.id);
-      setStatus("Connected");
-      socket.emit("hello-server", "Hello from React!");
-    });
-    socket.on("hello-client", (message) => {
+  const handleReceiveMessage = (message) => {
 
-    alert(message);
+    setMessages((previousMessages) => [
+      ...previousMessages,
+      message
+    ]);
 
-});
-    socket.on("disconnect", () => {
-      setStatus("Disconnected");
-      setSocketId("");
-    });
+  };
 
-    return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-    };
+  socket.on("connect", () => {
+    setSocketId(socket.id);
+    setStatus("Connected");
+  });
 
-  }, []);
+  socket.on("disconnect", () => {
+    setStatus("Disconnected");
+  });
+
+  socket.on("receive-message", handleReceiveMessage);
+
+  return () => {
+
+    socket.off("connect");
+    socket.off("disconnect");
+    socket.off("receive-message", handleReceiveMessage);
+
+  };
+
+}, []);
+  const sendMessage = () => {
+
+    if (message.trim() === "") return;
+
+    socket.emit("send-message", message);
+
+    setMessage("");
+
+};
 
   return (
-    <div style={{ padding: "40px", fontFamily: "Arial" }}>
-      <h1>Meeting App</h1>
 
-      <h2>Status : {status}</h2>
+    <div
+      style={{
+        maxWidth: "600px",
+        margin: "40px auto",
+        fontFamily: "Arial",
+        padding: "20px",
+        border: "1px solid lightgray",
+        borderRadius: "10px"
+      }}
+    >
 
-      <h3>Socket ID</h3>
+      <h1>💬 Meeting Chat</h1>
 
-      <p>{socketId}</p>
+      <p><b>Status:</b> {status}</p>
+
+      <p><b>Socket ID:</b> {socketId}</p>
+
+      <hr />
+
+      <div
+        style={{
+          height: "300px",
+          overflowY: "auto",
+          border: "1px solid gray",
+          padding: "10px",
+          marginBottom: "15px"
+        }}
+      >
+
+        {
+          messages.map((msg, index) => (
+
+            <p key={index}>
+              {msg}
+            </p>
+
+          ))
+        }
+
+      </div>
+
+      <input
+        type="text"
+        placeholder="Type your message..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        style={{
+          width: "75%",
+          padding: "10px"
+        }}
+      />
+
+      <button
+    onClick={sendMessage}
+    style={{
+        padding: "10px 20px",
+        marginLeft: "10px"
+    }}
+    >
+    Send
+</button>
 
     </div>
+
   );
+
 }
 
 export default App;

@@ -158,3 +158,67 @@ Q: What does `socket.join(room)` do?
 Answer:
 
 It adds the connected socket to a named Socket.IO room. Once inside that room, the server can send events specifically to members of that room without affecting users in other rooms.
+
+## Why did I send an object instead of just a message?
+
+Earlier, I only sent the message text:
+
+socket.emit("send-message", message)
+
+The server knew the message but didn't know which room it belonged to.
+
+Now I send an object:
+
+{
+  room,
+  message
+}
+
+This allows the server to know both:
+- which room should receive the message, and
+- what the actual message is.
+
+Using objects to send related data is a common practice in Socket.IO because it makes the communication more flexible and easier to extend later.
+
+# Biggest Achievement Today
+
+Today I successfully implemented Socket.IO Rooms.
+
+Now messages are no longer sent to every connected user.
+
+Instead, they are sent only to users who joined the same room.
+
+### Before
+
+io.emit()
+
+Result:
+
+Every connected client received the message.
+
+### After
+
+io.to(room).emit()
+
+Result:
+
+Only users inside the specified room receive the message.
+
+This is the same concept used by applications like Google Meet, Zoom, Discord, and Microsoft Teams to separate different meetings.
+
+---
+
+## What I learned
+
+When sending data to the server, I don't always send a single value.
+
+Instead, I can send an object.
+
+Example:
+
+{
+    room,
+    message
+}
+
+This makes communication more organized and allows the server to know exactly where the message belongs.

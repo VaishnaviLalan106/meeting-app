@@ -56,7 +56,7 @@ function App() {
 
     if (message.trim() === "") return;
 
-    socket.emit("send-message", message);
+    socket.emit("send-message", {room, message});
 
     setMessage("");
 

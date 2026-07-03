@@ -42,13 +42,16 @@ io.on("connection", (socket) => {
 
 });
 
-    socket.on("send-message", (message) => {
+    socket.on("send-message", (data) => {
 
-        console.log(message);
+    console.log(data);
 
-        io.emit("receive-message", message);
+    io.to(data.room).emit(
+        "receive-message",
+        data.message
+    );
 
-    });
+});
 
     socket.on("disconnect", () => {
 

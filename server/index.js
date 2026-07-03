@@ -34,6 +34,13 @@ io.on("connection", (socket) => {
         );
 
     });
+    socket.on("join-room", (room) => {
+
+    socket.join(room);
+
+    console.log(`${socket.id} joined room ${room}`);
+
+});
 
     socket.on("send-message", (message) => {
 

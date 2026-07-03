@@ -9,6 +9,8 @@ function App() {
   const [status, setStatus] = useState("Connecting...");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [room, setRoom] = useState("");
+  const [joined, setJoined] = useState(false);
 
   useEffect(() => {
 
@@ -41,6 +43,15 @@ function App() {
   };
 
 }, []);
+  const joinRoom = () => {
+
+    if (room.trim() === "") return;
+
+    socket.emit("join-room", room);
+
+    setJoined(true);
+
+};
   const sendMessage = () => {
 
     if (message.trim() === "") return;
@@ -71,6 +82,30 @@ function App() {
       <p><b>Socket ID:</b> {socketId}</p>
 
       <hr />
+      <div style={{ marginBottom: "20px" }}>
+
+  <input
+    type="text"
+    placeholder="Enter Room ID..."
+    value={room}
+    onChange={(e) => setRoom(e.target.value)}
+    style={{
+      width: "60%",
+      padding: "10px"
+    }}
+  />
+
+  <button
+    onClick={joinRoom}
+    style={{
+      padding: "10px 20px",
+      marginLeft: "10px"
+    }}
+  >
+    Join Room
+  </button>
+
+</div>
 
       <div
         style={{

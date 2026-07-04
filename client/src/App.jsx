@@ -36,7 +36,7 @@ function App() {
     }
 
 };
-  startCamera();
+  
   const createPeerConnection = () => {
     peerConnection.current = new RTCPeerConnection();
 
@@ -96,6 +96,7 @@ function App() {
 
   socket.on("receive-message", handleReceiveMessage);
   socket.on("offer", handleOffer);
+  startCamera();
 
   return () => {
 

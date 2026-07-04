@@ -220,3 +220,27 @@ createOffer();
 Only then does JavaScript execute the code inside the function.
 
 This is an important concept because many helper functions exist in a project before they are actually used.
+# React Component Architecture
+
+Whenever creating a React component, I will follow this order:
+
+1. Imports
+2. Socket/API initialization
+3. States (useState)
+4. Refs (useRef)
+5. Helper functions
+6. Event/Button functions
+7. useEffect()
+8. return() (UI)
+
+As the project grows, helper functions should be grouped into sections using comments.
+
+Example sections:
+
+- Camera Functions
+- WebRTC Functions
+- Room Functions
+- Chat Functions
+- Utility Functions
+
+Keeping the same structure in every component makes the project easier to understand, debug, and maintain.

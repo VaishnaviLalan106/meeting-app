@@ -75,7 +75,7 @@ Today I learned how Socket.IO creates meeting rooms.
 The method:
 
 ```javascript
-socket.join(room)
+socket.join(room);
 ```
 
 adds the current connected client to a specific room.
@@ -170,11 +170,12 @@ The server knew the message but didn't know which room it belonged to.
 Now I send an object:
 
 {
-  room,
-  message
+room,
+message
 }
 
 This allows the server to know both:
+
 - which room should receive the message, and
 - what the actual message is.
 
@@ -217,8 +218,8 @@ Instead, I can send an object.
 Example:
 
 {
-    room,
-    message
+room,
+message
 }
 
 This makes communication more organized and allows the server to know exactly where the message belongs.

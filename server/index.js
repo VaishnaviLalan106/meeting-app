@@ -52,6 +52,27 @@ io.on("connection", (socket) => {
     );
 
 });
+    socket.on("offer", (data) => {
+
+    console.log("Offer received");
+
+    socket.to(data.room).emit("offer", data);
+
+});
+    socket.on("answer", (data) => {
+
+    console.log("Answer received");
+
+    socket.to(data.room).emit("answer", data);
+
+});
+    socket.on("ice-candidate", (data) => {
+
+    console.log("ICE Candidate received");
+
+    socket.to(data.room).emit("ice-candidate", data);
+
+});
 
     socket.on("disconnect", () => {
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:5000");
@@ -11,6 +11,7 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [room, setRoom] = useState("");
   const [joined, setJoined] = useState(false);
+  const localVideoRef = useRef(null);
 
   useEffect(() => {
 
@@ -33,7 +34,29 @@ function App() {
   });
 
   socket.on("receive-message", handleReceiveMessage);
+  const startCamera = async () => {
 
+    try {
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+
+            video: true,
+
+            audio: true
+
+        });
+
+        localVideoRef.current.srcObject = stream;
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+};
+
+  startCamera();
   return () => {
 
     socket.off("connect");
@@ -104,7 +127,18 @@ function App() {
   >
     Join Room
   </button>
-
+  <video
+    ref={localVideoRef}
+    autoPlay
+    playsInline
+    muted
+    style={{
+        width: "300px",
+        borderRadius: "10px",
+        border: "2px solid gray",
+        marginBottom: "20px"
+    }}
+/>
 </div>
 
       <div

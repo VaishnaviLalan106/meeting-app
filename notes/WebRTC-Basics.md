@@ -200,3 +200,23 @@ handleOffer()
 → Processes an Offer received from another user.
 
 This structure keeps the code easier to understand and maintain.
+
+# Creating vs Calling a Function
+
+Creating a function only defines what it should do.
+
+Example:
+
+const createOffer = async () => {
+    ...
+}
+
+Nothing happens until the function is called.
+
+Example:
+
+createOffer();
+
+Only then does JavaScript execute the code inside the function.
+
+This is an important concept because many helper functions exist in a project before they are actually used.

@@ -15,28 +15,6 @@ function App() {
   const peerConnection = useRef(null);
   const localStream = useRef(null);
 
-  useEffect(() => {
-
-  const handleReceiveMessage = (message) => {
-
-    setMessages((previousMessages) => [
-      ...previousMessages,
-      message
-    ]);
-
-  };
-
-  socket.on("connect", () => {
-    setSocketId(socket.id);
-    setStatus("Connected");
-  });
-
-  socket.on("disconnect", () => {
-    setStatus("Disconnected");
-  });
-
-  socket.on("receive-message", handleReceiveMessage);
-
   const startCamera = async () => {
 
     try {
@@ -75,7 +53,7 @@ function App() {
 });
 
 };
-  socket.on("offer", handleOffer);
+  
   const createOffer = async () => {
 
     const offer = await peerConnection.current.createOffer();
@@ -95,13 +73,36 @@ function App() {
     console.log("Offer received");
 
 };
+ 
+  useEffect(() => {
+
+  const handleReceiveMessage = (message) => {
+
+    setMessages((previousMessages) => [
+      ...previousMessages,
+      message
+    ]);
+
+  };
+
+  socket.on("connect", () => {
+    setSocketId(socket.id);
+    setStatus("Connected");
+  });
+
+  socket.on("disconnect", () => {
+    setStatus("Disconnected");
+  });
+
+  socket.on("receive-message", handleReceiveMessage);
+  socket.on("offer", handleOffer);
 
   return () => {
 
     socket.off("connect");
     socket.off("disconnect");
     socket.off("receive-message", handleReceiveMessage);
-    socket.on("offer", handleOffer);
+    socket.off("offer", handleOffer);
 
   };
 
@@ -114,6 +115,10 @@ function App() {
     socket.emit("join-room", room);
 
     setJoined(true);
+
+    createPeerConnection();
+
+    createOffer();
 
 };
   const sendMessage = () => {

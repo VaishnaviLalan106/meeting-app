@@ -12,6 +12,7 @@ function App() {
   const [room, setRoom] = useState("");
   const [joined, setJoined] = useState(false);
   const localVideoRef = useRef(null);
+  const peerConnection = useRef(null);
 
   useEffect(() => {
 
@@ -47,6 +48,12 @@ function App() {
         });
 
         localVideoRef.current.srcObject = stream;
+        peerConnection.current = new RTCPeerConnection();
+        stream.getTracks().forEach((track) => {
+
+        peerConnection.current.addTrack(track, stream);
+
+});
 
     } catch (error) {
 

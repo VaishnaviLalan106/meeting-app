@@ -120,3 +120,28 @@ This does NOT mean a video call is working yet.
 The camera stream has not been sent to another browser.
 
 The next step is to create a WebRTC peer connection so that browsers can exchange their video and audio streams.
+
+# WebRTC Basics
+
+Socket.IO and WebRTC have different jobs.
+
+Socket.IO is used only for signaling:
+- Join room
+- Send offer
+- Send answer
+- Exchange ICE candidates
+
+WebRTC is responsible for:
+- Video
+- Audio
+- Screen sharing
+
+A WebRTC connection is represented by an RTCPeerConnection object.
+
+The local camera and microphone stream must be added to the RTCPeerConnection using:
+
+stream.getTracks().forEach((track) => {
+    peerConnection.addTrack(track, stream);
+});
+
+Without adding tracks, the peer connection exists but no media can be sent.

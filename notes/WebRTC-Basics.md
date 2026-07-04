@@ -145,3 +145,58 @@ stream.getTracks().forEach((track) => {
 });
 
 Without adding tracks, the peer connection exists but no media can be sent.
+
+## WebRTC Offer
+
+The first browser creates an SDP Offer using:
+
+const offer = await peerConnection.createOffer();
+
+This offer contains information about the browser's media capabilities, supported codecs, encryption, and connection parameters.
+
+After creating the offer, it must be saved as the browser's local description:
+
+await peerConnection.setLocalDescription(offer);
+
+The offer is then sent to the other participant using Socket.IO.
+
+Important:
+The offer should only be created after the user has joined a room. Even correct code can fail if it runs at the wrong time.
+
+# Single Responsibility Principle
+
+Instead of writing one large function that performs many tasks, divide the work into smaller functions.
+
+Example:
+
+startCamera()
+→ Only requests camera and microphone access.
+
+createPeerConnection()
+→ Creates the RTCPeerConnection and attaches media tracks.
+
+Keeping functions focused makes the code easier to read, debug, and extend.
+## Refactoring
+
+Refactoring means improving the internal structure of the code without changing what the user sees.
+
+The application's behavior stays the same, but the code becomes cleaner, easier to read, and easier to maintain.
+# WebRTC Signaling Structure
+
+Instead of writing all WebRTC logic in one place, separate it into functions with clear responsibilities.
+
+Example:
+
+startCamera()
+→ Requests camera and microphone.
+
+createPeerConnection()
+→ Creates the RTCPeerConnection and attaches local media.
+
+createOffer()
+→ Creates and sends an SDP Offer.
+
+handleOffer()
+→ Processes an Offer received from another user.
+
+This structure keeps the code easier to understand and maintain.

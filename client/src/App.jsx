@@ -13,6 +13,7 @@ function App() {
   const [joined, setJoined] = useState(false);
   const localVideoRef = useRef(null);
   const peerConnection = useRef(null);
+  const localStream = useRef(null);
 
   useEffect(() => {
 
@@ -35,6 +36,7 @@ function App() {
   });
 
   socket.on("receive-message", handleReceiveMessage);
+
   const startCamera = async () => {
 
     try {
@@ -46,15 +48,9 @@ function App() {
             audio: true
 
         });
+        localStream.current = stream;
 
         localVideoRef.current.srcObject = stream;
-        peerConnection.current = new RTCPeerConnection();
-        stream.getTracks().forEach((track) => {
-
-        peerConnection.current.addTrack(track, stream);
-
-});
-
     } catch (error) {
 
         console.error(error);
@@ -62,17 +58,55 @@ function App() {
     }
 
 };
-
   startCamera();
+  const createPeerConnection = () => {
+    peerConnection.current = new RTCPeerConnection();
+
+    localStream.current.getTracks().forEach((track) => {
+
+    peerConnection.current.addTrack(
+
+        track,
+
+        localStream.current
+
+    );
+
+});
+
+};
+  socket.on("offer", handleOffer);
+  const createOffer = async () => {
+
+    const offer = await peerConnection.current.createOffer();
+
+    await peerConnection.current.setLocalDescription(offer);
+
+    socket.emit("offer", {
+
+        room,
+        offer
+
+    });
+
+};
+  const handleOffer = async (data) => {
+
+    console.log("Offer received");
+
+};
+
   return () => {
 
     socket.off("connect");
     socket.off("disconnect");
     socket.off("receive-message", handleReceiveMessage);
+    socket.on("offer", handleOffer);
 
   };
 
 }, []);
+
   const joinRoom = () => {
 
     if (room.trim() === "") return;
